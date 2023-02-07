@@ -37,21 +37,14 @@ export default command(meta, async ({ client, interaction }) => {
     }).join('\n')
 
     const currentSong = queue.current
+    const currentSongString = currentSong ? `\`${currentSong.duration}\` [${currentSong.title}](${currentSong.url}) - <@${currentSong.requestedBy.id}>` : 'Nothing'
+
+    console.log(queueString)
 
     await interaction.reply({
         embeds: [
             new EmbedBuilder()
-                .setDescription(`**${interaction.guild?.name}'s Queue**`)
-                .setFields(
-                    {
-                        name: 'Currently Playing',
-                        value: currentSong ? `\`[${currentSong.duration}]\` ${currentSong.title} - <@${currentSong.requestedBy.id}>` : 'Nothing',
-                    },
-                    {
-                        name: 'Up Next',
-                        value: queueString || 'Nothing',
-                    }
-                )
+                .setDescription(`**Currently Playing**\n${currentSongString}\n\n**Up Next**\n${queueString}`)
                 .setFooter({ text: `Page ${page + 1} of ${totalPages}`, iconURL: interaction.member.avatar! })
                 .setThumbnail(currentSong.thumbnail)
                 .setTimestamp()

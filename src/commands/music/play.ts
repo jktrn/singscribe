@@ -51,7 +51,9 @@ export default command(meta, async ({ client, interaction }) => {
         content: 'You need to be in a voice channel to use this command.'}
     )
 
-    const queue = await client.player.createQueue(interaction.guildId)
+    let queue = client.player.getQueue(interaction.guildId)
+    if(!queue) queue = await client.player.createQueue(interaction.guildId)
+    
     if(!queue.connection) await queue.connect(member.voice.channel)
 
     let embed = new EmbedBuilder()
@@ -71,6 +73,8 @@ export default command(meta, async ({ client, interaction }) => {
 
             const song = result.tracks[0]
             await queue.addTrack(song)
+
+            console.log(song.thumbnail)
 
             embed
                 .setDescription(`**[${song.title}](${song.url})** has been added to the queue!`)
@@ -92,9 +96,9 @@ export default command(meta, async ({ client, interaction }) => {
             await queue.addTracks(result.tracks)
 
             embed
-                .setDescription(`**[${playlist.title}](${playlist.url})** has been added to the queue!`)
-                .setThumbnail(playlist.thumbnail)
-                .setFooter({ text: `Author: ${playlist.author}`, iconURL: interaction.user.avatarURL()! })
+                .setDescription(`The playlist **[${playlist.title}](${playlist.url})** has been added to the queue!`)
+                .setThumbnail(playlist.tracks[0].thumbnail)
+                .setFooter({ text: `Total songs: ${playlist.tracks.length}`, iconURL: interaction.user.avatarURL()! })
                 .setTimestamp()
             break
         }
