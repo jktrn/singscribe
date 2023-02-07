@@ -3,12 +3,14 @@ import {
     Client,
     ChatInputCommandInteraction,
     SlashCommandBuilder,
+    SlashCommandSubcommandsOnlyBuilder,
 } from 'discord.js'
+import { CustomClient } from '../client'
 
 type LoggerFunction = (...args: unknown[]) => void
 export interface CommandProps {
     interaction: ChatInputCommandInteraction
-    client: Client
+    client: CustomClient
     log: LoggerFunction
 }
 
@@ -17,6 +19,7 @@ export type CommandExec =
 
 export type CommandMeta =
     | SlashCommandBuilder
+    | SlashCommandSubcommandsOnlyBuilder
     | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">
 
 export interface Command {

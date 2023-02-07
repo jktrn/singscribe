@@ -1,5 +1,5 @@
 import { Event, EventExec, EventKeys } from '../types'
-import { Client } from 'discord.js'
+import { CustomClient } from '../client'
 
 // Creates an event function
 export function event<T extends EventKeys>(id: T, exec: EventExec<T>): Event<T> {
@@ -10,7 +10,7 @@ export function event<T extends EventKeys>(id: T, exec: EventExec<T>): Event<T> 
 }
 
 // Logs events to the console
-export function registerEvents(client: Client, events: Event<any>[]): void {
+export function registerEvents(client: CustomClient, events: Event<any>[]): void {
     for (const event of events) {
         client.on(event.id, async (...args) => {
             const props = {
