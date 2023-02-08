@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js'
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 import { command } from '../../utils'
 
 const meta = new SlashCommandBuilder()
@@ -13,29 +13,29 @@ const meta = new SlashCommandBuilder()
     )
 
 export default command(meta, async ({ client, interaction }) => {
-    if(!interaction.inGuild()) return interaction.reply({
-        ephemeral: true,
-        content: 'You can only use this command in a server.',
-    })
+    const embed = new EmbedBuilder()
+    if(!interaction.inGuild()) {
+        embed.setDescription('This command can only be used in a server.')
+        return await interaction.reply({ embeds: [embed], ephemeral: true })
+    }
 
     const queue = client.player.getQueue(interaction.guildId)
-    if(!queue) return await interaction.reply({
-        ephemeral: true,
-        content: 'There is no music playing.',
-    })
+    if(!queue) {
+        embed.setDescription('There is no music playing.')
+        return await interaction.reply({ embeds: [embed], ephemeral: true })
+    }
 
     const currentSong = queue.current
     const trackNumber = interaction.options.getNumber('tracknumber', true)
-    if(trackNumber > queue.tracks.length) return await interaction.reply({
-        ephemeral: true,
-        content: 'The track number you provided is not valid!',
-    })
+    if(trackNumber > queue.tracks.length) {
+        embed.setDescription(`The track number must be less than ${queue.tracks.length}.`)
+        return await interaction.reply({ embeds: [embed], ephemeral: true })
+    }
 
     queue.skipTo(trackNumber - 1)
+    embed.setDescription(`${currentSong.title} has been skipped! Moving to track number ${trackNumber}.`)
+
     await interaction.reply({
-        embeds: [
-            new EmbedBuilder()
-                .setDescription(`${currentSong.title} has been skipped! Moving to track number ${trackNumber}.`)
-        ]
+        embeds: [embed]
     })
 })

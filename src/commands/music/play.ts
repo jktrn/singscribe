@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js'
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 import { QueryType } from 'discord-player'
 import { command } from '../../utils'
 
@@ -40,23 +40,40 @@ const meta = new SlashCommandBuilder()
     )
 
 export default command(meta, async ({ client, interaction }) => {
-    if(!interaction.inGuild()) return interaction.reply({
-        ephemeral: true,
-        content: 'You can only use this command in a server.'}
-    )
-
+    const embed = new EmbedBuilder()
     const member = await interaction.guild?.members.fetch(interaction.user.id)
-    if(!member?.voice.channel) return interaction.reply({
-        ephemeral: true,
-        content: 'You need to be in a voice channel to use this command.'}
-    )
 
-    let queue = client.player.getQueue(interaction.guildId)
-    if(!queue) queue = await client.player.createQueue(interaction.guildId)
-    
-    if(!queue.connection) await queue.connect(member.voice.channel)
+    if(!interaction.inGuild()) {
+        embed.setDescription('You can only use this command in a server.')
+        return await interaction.reply({ embeds: [embed], ephemeral: true })
+    }
 
-    let embed = new EmbedBuilder()
+    if (
+        interaction.guild?.members.me?.voice.channelId
+        && member?.voice.channelId !== interaction.guild.members.me.voice.channelId
+    ) {
+        embed.setDescription("I can't play music in that voice channel.");
+        return await interaction.reply({ embeds: [embed], ephemeral: true });
+    }
+
+    if(!member?.voice.channel) {
+        embed.setDescription('You need to be in a voice channel to use this command.')
+        return await interaction.reply({ embeds: [embed], ephemeral: true })
+    }
+
+    const queue = client.player.createQueue(interaction.guildId, {
+        leaveOnEnd: false,
+        leaveOnStop: false,
+        leaveOnEmpty: true,
+    })
+
+    try {
+        if(!queue.connection) await queue.connect(member.voice.channel)
+    } catch(err) {
+        queue.destroy()
+        embed.setDescription(`I could not join your voice channel: ${err}`)
+        return await interaction.reply({ embeds: [embed], ephemeral: true })
+    }
 
     switch(interaction.options.getSubcommand()) {
         case 'song': {
@@ -66,15 +83,13 @@ export default command(meta, async ({ client, interaction }) => {
                 searchEngine: QueryType.YOUTUBE_VIDEO,
             })
 
-            if(!result || !result.tracks.length) return interaction.reply({
-                ephemeral: true,
-                content: 'No results found.'}
-            )
+            if(!result || !result.tracks.length) {
+                embed.setDescription('No results found.')
+                return await interaction.reply({ embeds: [embed], ephemeral: true })
+            }
 
             const song = result.tracks[0]
             await queue.addTrack(song)
-
-            console.log(song.thumbnail)
 
             embed
                 .setDescription(`**[${song.title}](${song.url})** has been added to the queue!`)
@@ -91,7 +106,10 @@ export default command(meta, async ({ client, interaction }) => {
             })
 
             const playlist = result.playlist
-            if(!playlist) return
+            if(!playlist) {
+                embed.setDescription('No results found.')
+                return await interaction.reply({ embeds: [embed], ephemeral: true })
+            }
 
             await queue.addTracks(result.tracks)
 
@@ -109,10 +127,10 @@ export default command(meta, async ({ client, interaction }) => {
                 searchEngine: QueryType.AUTO,
             })
 
-            if(!result || !result.tracks.length) return interaction.reply({
-                ephemeral: true,
-                content: 'No results found.'}
-            )
+            if(!result || !result.tracks.length) {
+                embed.setDescription('No results found.')
+                return await interaction.reply({ embeds: [embed], ephemeral: true })
+            }
 
             const song = result.tracks[0]
             await queue.addTrack(song)

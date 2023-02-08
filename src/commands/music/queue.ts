@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js'
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 import { command } from '../../utils'
 
 const meta = new SlashCommandBuilder()
@@ -13,41 +13,45 @@ const meta = new SlashCommandBuilder()
     )
 
 export default command(meta, async ({ client, interaction }) => {
-    if(!interaction.inGuild()) return interaction.reply({
-        ephemeral: true,
-        content: 'You can only use this command in a server.'}
-    )
+    const embed = new EmbedBuilder()
+    
+    if(!interaction.inGuild()) {
+        embed.setDescription('You can only use this command in a server.')
+        return await interaction.reply({ embeds: [embed], ephemeral: true })
+    }
 
     const queue = await client.player.getQueue(interaction.guildId)
-    if(!queue || !queue.playing) return interaction.reply({
-        ephemeral: true,
-        content: 'No songs are currently in the queue.'}
-    )
+
+    if(!queue) {
+        embed.setDescription('There are no songs in the queue!')
+        return await interaction.reply({ embeds: [embed], ephemeral: true })
+    }
+
+    if (!queue.tracks[0]) {
+        embed.setDescription('There aren\'t any other tracks in the queue. Use \`/info\` to show information about the current track.')
+        return await interaction.reply({ embeds: [embed], ephemeral: true })
+    }
 
     const totalPages = Math.ceil(queue.tracks.length / 10) || 1
     const page = (interaction.options.getNumber('page') || 1) - 1
 
-    if(page > totalPages) return interaction.reply({
-        ephemeral: true,
-        content: `The page number must be less than or equal to ${totalPages}.`}
-    )
+    if(page > totalPages) {
+        embed.setDescription(`There are only ${totalPages} pages in the queue.`)
+        return await interaction.reply({ embeds: [embed], ephemeral: true })
+    }
 
-    const queueString = queue.tracks.slice(page * 10, page * 10 + 10).map((song, i) => {
-        return `**${page * 10 + i + 1}**. \`${song.duration}\` [${song.title}](${song.url}) - <@${song.requestedBy.id}>`
+    const tracks = queue.tracks.slice(page * 10 + 1, page * 10 + 11).map((song, i) => {
+        return `**${(page * 10 + (i + 1)).toString().padStart(2, '0')}**. [${song.title}](${song.url}) (<@${song.requestedBy.id}>, \`${song.duration}\`)`
     }).join('\n')
+    const progress = queue.createProgressBar();
 
-    const currentSong = queue.current
-    const currentSongString = currentSong ? `\`${currentSong.duration}\` [${currentSong.title}](${currentSong.url}) - <@${currentSong.requestedBy.id}>` : 'Nothing'
-
-    console.log(queueString)
+    embed
+        .setDescription(`**Current Track:** [${queue.current.title}](${queue.current.url}) \n${progress}\n\n**Next Up** (Total: ${queue.tracks.length - 1})\n${tracks}`)
+        .setFooter({ text: `Page ${page + 1} of ${totalPages}`, iconURL: interaction.member.avatar! })
+        .setTimestamp()
+        .setThumbnail(queue.current.thumbnail)
 
     await interaction.reply({
-        embeds: [
-            new EmbedBuilder()
-                .setDescription(`**Currently Playing**\n${currentSongString}\n\n**Up Next**\n${queueString}`)
-                .setFooter({ text: `Page ${page + 1} of ${totalPages}`, iconURL: interaction.member.avatar! })
-                .setThumbnail(currentSong.thumbnail)
-                .setTimestamp()
-        ]
+        embeds: [embed]
     })
 })
