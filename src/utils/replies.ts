@@ -6,7 +6,7 @@ import {
 
 export const Colors = {
     error: 0xf54242,
-    default: 0x3c5885,
+    default: 0x294978,
 }
 
 export const Reply = {
