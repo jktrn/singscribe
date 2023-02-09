@@ -45,6 +45,7 @@ export default command(meta, async ({ client, interaction }) => {
 
     // Gets the query from the command options
     const query = interaction.options.getString('query', true)
+    if(!query) return interaction.editReply(EditReply.error('You need to provide a search query!'))
 
     // Searches for the query using the AUTO search engine
     const result = await client.player.search(query, {

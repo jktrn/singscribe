@@ -22,7 +22,6 @@ export const Reply = {
 
     info(msg: string, thumbnail?: string, footer?: EmbedFooterData): InteractionReplyOptions {
         return {
-            ephemeral: true,
             embeds: [{
                 color: Colors.default,
                 description: msg,
