@@ -6,7 +6,7 @@
 ![Discord.js]
 ![Discord Player]
 
-singscribe is a [**Discord**](https://discord.com/) music bot built upon [**TypeScript**](https://www.typescriptlang.org/), the [**Discord.js**](https://discord.js.org/#/) API, and the [**discord-player**](https://discord-player.js.org/) framework.
+singscribe is a work-in-progress [**Discord**](https://discord.com/) music bot built upon [**TypeScript**](https://www.typescriptlang.org/), the [**Discord.js**](https://discord.js.org/#/) API, and the [**discord-player**](https://discord-player.js.org/) framework.
 
 </div>
 
@@ -33,16 +33,41 @@ singscribe is a [**Discord**](https://discord.com/) music bot built upon [**Type
     npm run dev
     ```
 
-The `dev` script will run the bot with [nodemon](https://nodemon.io/), which will automatically restart the bot when changes are made to the source code.
+> **Note**: The `dev` script will run the bot with [nodemon](https://nodemon.io/), which will automatically restart the bot when changes are made to the source code.
 
 
 ## ⚙️ Configuration
 
 The bot requires a Discord bot token to use the Discord API. [Follow this guide](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot) to create a bot application within Discord's developer portal to get a token.
 
-> **Warning**: Never, ever, *ever* share/commit your bot token (or any API key in general). Malicious users can use your token to gain access to your bot and any servers it is in. If you accidentally commit your token, [revoke it immediately](https://discordjs.guide/preparations/setting-up-a-bot-application.html#revoking-token-and-invite-link) and generate a new one.
+> **Warning**: **Never, ever, *ever* share/commit your bot token** (or any API key in general)! Malicious users can use it to gain privileged access to your bot and any servers it is in. If you accidentally commit your token, [revoke it immediately](https://discordjs.guide/preparations/setting-up-a-bot-application.html#revoking-token-and-invite-link) and generate a new one.
 
-After you've acquired your token, copy the `.example.env` file, rename it to `.env`, and replace the `TOKEN` value with your own. For test guild deployments, change the `TEST_GUILD` value to your testing server's ID (right-click on the server icon and select "Copy ID").
+After you've acquired your token, copy the `.example.env` file, which contains such:
+
+```env
+TOKEN="token"
+TEST_GUILD="123456789"
+```
+
+Name this new file `.env`, and replace the `TOKEN` value with your own. For test guild deployments, change the `TEST_GUILD` value to your testing server's ID (right-click on the server icon and select "Copy ID").
+
+### 🚀 Deployment
+
+To deploy slash commands to your test guild, run the following command:
+
+```sh
+npm run deploy
+```
+
+This will run the `deploy` script specified in `package.json` (`cross-env IS_SCRIPT=true ts-node src/scripts/deploy`), which will deploy the bot's slash commands to your test guild whenever commands are added or removed. **You do not need to run this script when you make changes to existing commands.**
+
+To deploy functions to production (which includes all servers your bot is in), run the following command:
+
+```sh
+npm run deploy-prod
+```
+
+> **Note**: Discord production deploys take upwards of an hour to take effect. Ensure your command properly functions before running this script.
 
 ---
 
