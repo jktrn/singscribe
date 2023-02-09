@@ -94,7 +94,7 @@ export default command(meta, async ({ client, interaction }) => {
             embed
                 .setDescription(`**[${song.title}](${song.url})** has been added to the queue!`)
                 .setThumbnail(song.thumbnail)
-                .setFooter({ text: `Requested by ${song.requestedBy.tag}`, iconURL: interaction.user.avatarURL()! })
+                .setFooter({ text: `Requested by ${song.requestedBy!.tag}`, iconURL: interaction.user.avatarURL()! })
                 .setTimestamp()
             break
         }
@@ -138,7 +138,7 @@ export default command(meta, async ({ client, interaction }) => {
             embed
                 .setDescription(`**[${song.title}](${song.url})** has been added to the queue!`)
                 .setThumbnail(song.thumbnail)
-                .setFooter({ text: `Requested by ${song.requestedBy.tag}`, iconURL: interaction.user.avatarURL()! })
+                .setFooter({ text: `Requested by ${song.requestedBy!.tag}`, iconURL: interaction.user.avatarURL()! })
                 .setTimestamp()
             break
         }

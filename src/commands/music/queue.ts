@@ -41,15 +41,15 @@ export default command(meta, async ({ client, interaction }) => {
     }
 
     const tracks = queue.tracks.slice(page * 10 + 1, page * 10 + 11).map((song, i) => {
-        return `**${(page * 10 + (i + 1)).toString().padStart(2, '0')}**. [${song.title}](${song.url}) (<@${song.requestedBy.id}>, \`${song.duration}\`)`
+        return `**${(page * 10 + (i + 1)).toString().padStart(2, '0')}**. [${song.title}](${song.url}) (<@${song.requestedBy!.id}>, \`${song.duration}\`)`
     }).join('\n')
     const progress = queue.createProgressBar();
 
     embed
-        .setDescription(`**Current Track:** [${queue.current.title}](${queue.current.url}) \n${progress}\n\n**Next Up** (Total: ${queue.tracks.length - 1})\n${tracks}`)
+        .setDescription(`**Current Track:** [${queue.current!.title}](${queue.current!.url}) \n${progress}\n\n**Next Up** (Total: ${queue.tracks.length - 1})\n${tracks}`)
         .setFooter({ text: `Page ${page + 1} of ${totalPages}`, iconURL: interaction.member.avatar! })
         .setTimestamp()
-        .setThumbnail(queue.current.thumbnail)
+        .setThumbnail(queue.current!.thumbnail)
 
     await interaction.reply({
         embeds: [embed]
