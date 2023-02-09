@@ -1,13 +1,12 @@
 <div align="center">
 
-# singscribe
+![Banner]
 
 ![CodeFactor]
-![Code Size]
 ![Discord.js]
 ![Discord Player]
 
-*singscribe* is a [Discord](https://discord.com/) music bot built upon [TypeScript](https://www.typescriptlang.org/), the [Discord.js](https://discord.js.org/#/) API, and the [discord-player](https://discord-player.js.org/) framework.
+singscribe is a [**Discord**](https://discord.com/) music bot built upon [**TypeScript**](https://www.typescriptlang.org/), the [**Discord.js**](https://discord.js.org/#/) API, and the [**discord-player**](https://discord-player.js.org/) framework.
 
 </div>
 
@@ -28,7 +27,14 @@
     npm install
     ```
 
-3. After installing the dependencies, you can run the bot with `npm start` or `npm run dev`. The `dev` script will run the bot with [nodemon](https://nodemon.io/), which will automatically restart the bot when changes are made to the source code.
+3. After installing the dependencies, you can run the bot with:
+
+    ```sh
+    npm run dev
+    ```
+
+The `dev` script will run the bot with [nodemon](https://nodemon.io/), which will automatically restart the bot when changes are made to the source code.
+
 
 ## ⚙️ Configuration
 
@@ -42,7 +48,7 @@ After you've acquired your token, copy the `.example.env` file, rename it to `.e
 
 ## ⚡ Commands
 
-Here are tables of commands that *singscribe* currently supports:
+Here are tables of commands that singscribe currently supports:
 
 ### Music
 
@@ -71,9 +77,9 @@ Here are tables of commands that *singscribe* currently supports:
 
 ## 📝 License
 
-All code in this repository is licensed under the [**GNU Affero General Public License v3**](https://www.gnu.org/licenses/agpl-3.0.en.html). See the [LICENSE](LICENSE) file for more information.
+All code in this repository is licensed under the [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl-3.0.en.html). See the [LICENSE](LICENSE) file for more information.
 
+[Banner]: /src/config/banner.svg
 [CodeFactor]: https://img.shields.io/codefactor/grade/github/jktrn/singscribe?color=294978&style=for-the-badge&logo=codefactor&logoColor=fff
-[Code Size]: https://img.shields.io/github/languages/code-size/jktrn/singscribe?color=294978&style=for-the-badge&logo=github
-[Discord.js]: https://img.shields.io/github/package-json/dependency-version/jktrn/singscribe/discord.js?color=294978&style=for-the-badge&logo=discord&logoColor=fff
-[Discord Player]: https://img.shields.io/github/package-json/dependency-version/jktrn/singscribe/discord-player?color=294978&style=for-the-badge&logo=npm&logoColor=white
+[Discord.js]: https://img.shields.io/github/package-json/dependency-version/jktrn/singscribe/discord.js?color=3e5b86&style=for-the-badge&logo=discord&logoColor=fff
+[Discord Player]: https://img.shields.io/github/package-json/dependency-version/jktrn/singscribe/discord-player?color=546d93&style=for-the-badge&logo=npm&logoColor=white
