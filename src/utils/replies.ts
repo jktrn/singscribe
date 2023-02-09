@@ -20,7 +20,7 @@ export const Reply = {
         }
     },
 
-    info(msg: string, thumbnail?: string, footer?: string ): InteractionReplyOptions {
+    info(msg: string, thumbnail?: string, footer?: EmbedFooterData): InteractionReplyOptions {
         return {
             ephemeral: true,
             embeds: [{
@@ -29,9 +29,7 @@ export const Reply = {
                 thumbnail: (thumbnail? {
                     url: thumbnail,
                 }: undefined),
-                footer: (footer? {
-                    text: footer,
-                }: undefined),
+                footer,
                 timestamp: new Date().toISOString()
             }],
         }

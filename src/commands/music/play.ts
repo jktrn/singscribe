@@ -1,7 +1,6 @@
 import { SlashCommandBuilder, WebhookEditMessageOptions } from 'discord.js'
 import { QueryType } from 'discord-player'
-import { command } from '../../utils'
-import { Reply, EditReply } from '../../utils/'
+import { command, Reply, EditReply } from '../../utils'
 
 const meta = new SlashCommandBuilder()
     .setName('play')
@@ -19,7 +18,6 @@ export default command(meta, async ({ client, interaction }) => {
     const member = await interaction.guild.members.fetch(interaction.user.id)
     const voiceChannel = member.voice.channelId
     const botChannel = interaction.guild.members.me?.voice.channelId
-
     if(!voiceChannel) return interaction.reply(Reply.error('You need to be in a voice channel to use this command.'))
     if(botChannel && voiceChannel !== botChannel) return interaction.reply(Reply.error('You need to be in the same voice channel as me to use this command.'))
 

@@ -1,6 +1,5 @@
 import {
     Awaitable,
-    Client,
     ChatInputCommandInteraction,
     SlashCommandBuilder,
     SlashCommandSubcommandsOnlyBuilder,
@@ -8,6 +7,7 @@ import {
 import { CustomClient } from '../client'
 
 type LoggerFunction = (...args: unknown[]) => void
+
 export interface CommandProps {
     interaction: ChatInputCommandInteraction
     client: CustomClient
