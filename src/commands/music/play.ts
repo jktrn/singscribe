@@ -1,152 +1,74 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
+import { SlashCommandBuilder, WebhookEditMessageOptions } from 'discord.js'
 import { QueryType } from 'discord-player'
 import { command } from '../../utils'
+import { Reply, EditReply } from '../../utils/'
 
 const meta = new SlashCommandBuilder()
     .setName('play')
-    .setDescription('Play a song or playlist from YouTube.')
-    .addSubcommand((subcommand) =>
-        subcommand
-            .setName('song')
-            .setDescription('Play a song from YouTube.')
-            .addStringOption((option) =>
-                option
-                    .setName('url')
-                    .setDescription('Provide a song name or URL to play.')
-                    .setRequired(true)
-            )
-    )
-    .addSubcommand((subcommand) =>
-        subcommand
-            .setName('playlist')
-            .setDescription('Play a playlist from YouTube.')
-            .addStringOption((option) =>
-                option
-                    .setName('url')
-                    .setDescription('Provide a playlist name or URL to play.')
-                    .setRequired(true)
-            )
-    )
-    .addSubcommand((subcommand) =>
-        subcommand
-            .setName('search')
-            .setDescription('Search for a song from YouTube.')
-            .addStringOption((option) =>
-                option
-                    .setName('query')
-                    .setDescription('Provide a query to search for.')
-                    .setRequired(true)
-            )
+    .setDescription('Play a song or playlist from YouTube, Spotify, SoundCloud, or Apple Music.')
+    .addStringOption((option) =>
+        option
+            .setName('query')
+            .setDescription('Search for a song or playlist.')
+            .setRequired(true),
     )
 
 export default command(meta, async ({ client, interaction }) => {
-    const embed = new EmbedBuilder()
-    const member = await interaction.guild?.members.fetch(interaction.user.id)
+    if(!interaction.guild) return interaction.reply(Reply.error('This command can only be used in a server.'))
 
-    if(!interaction.inGuild()) {
-        embed.setDescription('You can only use this command in a server.')
-        return await interaction.reply({ embeds: [embed], ephemeral: true })
-    }
+    const member = await interaction.guild.members.fetch(interaction.user.id)
+    const voiceChannel = member.voice.channelId
+    const botChannel = interaction.guild.members.me?.voice.channelId
 
-    if (
-        interaction.guild?.members.me?.voice.channelId
-        && member?.voice.channelId !== interaction.guild.members.me.voice.channelId
-    ) {
-        embed.setDescription("I can't play music in that voice channel.");
-        return await interaction.reply({ embeds: [embed], ephemeral: true });
-    }
+    if(!voiceChannel) return interaction.reply(Reply.error('You need to be in a voice channel to use this command.'))
+    if(botChannel && voiceChannel !== botChannel) return interaction.reply(Reply.error('You need to be in the same voice channel as me to use this command.'))
 
-    if(!member?.voice.channel) {
-        embed.setDescription('You need to be in a voice channel to use this command.')
-        return await interaction.reply({ embeds: [embed], ephemeral: true })
-    }
-
-    const queue = client.player.createQueue(interaction.guildId, {
-        leaveOnEnd: false,
-        leaveOnStop: false,
-        leaveOnEmpty: true,
-    })
+    await interaction.deferReply()
+    const queue = client.getElseCreateQueue(interaction.guild.id)
 
     try {
-        if(!queue.connection) await queue.connect(member.voice.channel)
+        if(!queue.connection) await queue.connect(voiceChannel)
     } catch(err) {
-        queue.destroy()
-        embed.setDescription(`I could not join your voice channel: ${err}`)
-        return await interaction.reply({ embeds: [embed], ephemeral: true })
+        queue.delete()
+        return interaction.editReply(EditReply.error(`I could not join your voice channel: ${err}`))
     }
 
-    switch(interaction.options.getSubcommand()) {
-        case 'song': {
-            let url = interaction.options.getString('url', true)
-            const result = await client.player.search(url, {
-                requestedBy: interaction.user,
-                searchEngine: QueryType.YOUTUBE_VIDEO,
-            })
+    const query = interaction.options.getString('query', true)
+    const result = await client.player.search(query, {
+        requestedBy: interaction.user,
+        searchEngine: QueryType.AUTO,
+    }).catch(() => {})
 
-            if(!result || !result.tracks.length) {
-                embed.setDescription('No results found.')
-                return await interaction.reply({ embeds: [embed], ephemeral: true })
-            }
+    if(!result || !result.tracks.length) return interaction.editReply(EditReply.error('No results were found.'))
 
-            const song = result.tracks[0]
-            await queue.addTrack(song)
-
-            embed
-                .setDescription(`**[${song.title}](${song.url})** has been added to the queue!`)
-                .setThumbnail(song.thumbnail)
-                .setFooter({ text: `Requested by ${song.requestedBy!.tag}`, iconURL: interaction.user.avatarURL()! })
-                .setTimestamp()
-            break
+    try {
+        if (!queue.connection) {
+            await queue.connect(voiceChannel)
         }
-        case 'playlist': {
-            let url = interaction.options.getString('url', true)
-            const result = await client.player.search(url, {
-                requestedBy: interaction.user,
-                searchEngine: QueryType.YOUTUBE_PLAYLIST,
-            })
-
-            const playlist = result.playlist
-            if(!playlist) {
-                embed.setDescription('No results found.')
-                return await interaction.reply({ embeds: [embed], ephemeral: true })
-            }
-
-            await queue.addTracks(result.tracks)
-
-            embed
-                .setDescription(`The playlist **[${playlist.title}](${playlist.url})** has been added to the queue!`)
-                .setThumbnail(playlist.tracks[0].thumbnail)
-                .setFooter({ text: `Total songs: ${playlist.tracks.length}`, iconURL: interaction.user.avatarURL()! })
-                .setTimestamp()
-            break
-        }
-        case 'search': {
-            let url = interaction.options.getString('query', true)
-            const result = await client.player.search(url, {
-                requestedBy: interaction.user,
-                searchEngine: QueryType.AUTO,
-            })
-
-            if(!result || !result.tracks.length) {
-                embed.setDescription('No results found.')
-                return await interaction.reply({ embeds: [embed], ephemeral: true })
-            }
-
-            const song = result.tracks[0]
-            await queue.addTrack(song)
-
-            embed
-                .setDescription(`**[${song.title}](${song.url})** has been added to the queue!`)
-                .setThumbnail(song.thumbnail)
-                .setFooter({ text: `Requested by ${song.requestedBy!.tag}`, iconURL: interaction.user.avatarURL()! })
-                .setTimestamp()
-            break
-        }
+    } catch (error) {
+        client.player.nodes.delete(interaction.guild.id)
+        return interaction.editReply(EditReply.error(`I could not join your voice channel: ${error}`))
     }
 
-    if(!queue.playing) await queue.play()
-    
-    await interaction.reply({
-        embeds: [embed]
-    })
+    let response: WebhookEditMessageOptions
+
+    if(result.playlist) {
+        queue.addTrack(result.playlist)
+        response = EditReply.info(
+            `**${result.playlist.title}** has been added to the queue!`,
+            result.playlist.thumbnail, 
+            { text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.avatarURL()! }
+        )
+    } else {
+        queue.addTrack(result.tracks[0])
+        response = EditReply.info(
+            `**${result.tracks[0].title}** has been added to the queue!`,
+            result.tracks[0].thumbnail,
+            { text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.avatarURL()! }
+        )
+    }
+
+    if (!queue.node.isPlaying()) await queue.node.play()
+
+    await interaction.editReply(response)
 })

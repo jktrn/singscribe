@@ -8,18 +8,18 @@ const meta = new SlashCommandBuilder()
 export default command(meta, async ({ client, interaction }) => {
     const embed = new EmbedBuilder()
 
-    if(!interaction.inGuild()) {
+    if(!interaction.guild) {
         embed.setDescription('This command can only be used in a server.')
         return await interaction.reply({ embeds: [embed], ephemeral: true })
     }
 
-    const queue = client.player.getQueue(interaction.guildId)
+    const queue = client.player.nodes.get(interaction.guild.id)
     if(!queue) {
         embed.setDescription('There is no music playing.')
         return await interaction.reply({ embeds: [embed], ephemeral: true })
     }
 
-    queue.setPaused(true)
+    queue.node.pause()
 
     embed.setDescription('Paused the music.')
     await interaction.reply({ embeds: [embed] })

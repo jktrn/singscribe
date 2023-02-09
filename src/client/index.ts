@@ -5,7 +5,7 @@ import { playerOptions, intents } from '../config'
 import { addSpeechEvent } from 'discord-speech-recognition'
 import events from '../events'
 import keys from '../keys'
-import { joinVoiceChannel } from '@discordjs/voice'
+// import { joinVoiceChannel } from '@discordjs/voice'
 
 // Custom client with Discord Player
 export class CustomClient extends Client {
@@ -13,13 +13,18 @@ export class CustomClient extends Client {
 
     public constructor(options: ClientOptions) {
         super(options)
-        this.player = new Player(this, playerOptions)
+        // this.player = new Player(this, playerOptions)
+        this.player = new Player(this)
     }
 
     public getElseCreateQueue(guildId: string): GuildQueue {
-      const queue = this.player.nodes.get(guildId)
-      if (queue) return queue
-      return this.player.nodes.create(guildId)
+        const queue = this.player.nodes.get(guildId)
+        if (queue) return queue
+        return this.player.nodes.create(guildId, {
+            leaveOnEnd: false,
+            leaveOnStop: false,
+            leaveOnEmpty: true,
+        })
     }
 }
 
@@ -30,24 +35,24 @@ const client = new CustomClient({
 
 // Binds events + logging to client
 registerEvents(client, events)
-addSpeechEvent(client)
+// addSpeechEvent(client)
 
-client.on("messageCreate", (msg) => {
-    const voiceChannel = msg.member?.voice.channel;
-    if (voiceChannel) {
-      joinVoiceChannel({
-        channelId: voiceChannel.id,
-        guildId: voiceChannel.guild.id,
-        adapterCreator: voiceChannel.guild.voiceAdapterCreator,
-        selfDeaf: false,
-      });
-    }
-  });
+// client.on("messageCreate", (msg) => {
+//     const voiceChannel = msg.member?.voice.channel;
+//     if (voiceChannel) {
+//       joinVoiceChannel({
+//         channelId: voiceChannel.id,
+//         guildId: voiceChannel.guild.id,
+//         adapterCreator: voiceChannel.guild.voiceAdapterCreator,
+//         selfDeaf: false,
+//       });
+//     }
+//   });
 
-client.on('speech', (msg) => {
-    if(!msg.content) return
-    console.log(msg.content)
-    });
+// client.on('speech', (msg) => {
+//     if(!msg.content) return
+//     console.log(msg.content)
+//     });
 
 // Login to Discord
 client.login(keys.token)
@@ -55,4 +60,3 @@ client.login(keys.token)
         console.error('[Login Error]', err)
         process.exit(1)
     })
-

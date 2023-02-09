@@ -1,10 +1,12 @@
 import {
+    EmbedFooterData,
     InteractionReplyOptions,
     WebhookEditMessageOptions,
 } from 'discord.js'
 
 export const Colors = {
     error: 0xf54242,
+    default: 0x3c5885,
 }
 
 export const Reply = {
@@ -16,7 +18,24 @@ export const Reply = {
                 description: msg,
             }],
         }
-    }
+    },
+
+    info(msg: string, thumbnail?: string, footer?: string ): InteractionReplyOptions {
+        return {
+            ephemeral: true,
+            embeds: [{
+                color: Colors.default,
+                description: msg,
+                thumbnail: (thumbnail? {
+                    url: thumbnail,
+                }: undefined),
+                footer: (footer? {
+                    text: footer,
+                }: undefined),
+                timestamp: new Date().toISOString()
+            }],
+        }
+    },
 }
 
 export const EditReply = {
@@ -25,6 +44,20 @@ export const EditReply = {
             embeds: [{
                 color: Colors.error,
                 description: msg,
+            }],
+        }
+    },
+
+    info(msg: string, thumbnail?: string, footer?: EmbedFooterData ): WebhookEditMessageOptions {
+        return {
+            embeds: [{
+                color: Colors.default,
+                description: msg,
+                thumbnail: (thumbnail? {
+                    url: thumbnail,
+                }: undefined),
+                footer,
+                timestamp: new Date().toISOString()
             }],
         }
     }
