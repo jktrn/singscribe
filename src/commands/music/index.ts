@@ -1,5 +1,8 @@
-import { category } from '../../utils'
+/**
+ * Exports all music commands for use in the main command handler.
+ */
 
+import { category } from '../../utils'
 import info from './info'
 import pause from './pause'
 import play from './play'

@@ -1,5 +1,4 @@
-import { Event, EventExec, EventKeys } from '../types'
-import { CustomClient } from '../client'
+import { CustomClient, Event, EventExec, EventKeys } from '../types'
 
 // Creates an event function
 export function event<T extends EventKeys>(id: T, exec: EventExec<T>): Event<T> {

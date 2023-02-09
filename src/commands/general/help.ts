@@ -1,3 +1,8 @@
+/**
+ * Paginated help command listing all commands supported by the bot.
+ * @usage /help
+ */
+
 import { SlashCommandBuilder } from 'discord.js'
 import { command } from '../../utils'
 import { getCategoryRoot } from '../../pages/help'

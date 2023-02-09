@@ -1,5 +1,5 @@
 import { ClientEvents, Awaitable } from 'discord.js'
-import { CustomClient } from '../client'
+import { CustomClient } from '../types'
 
 type LoggerFunction = (...args: unknown[]) => void
 export interface EventProps {

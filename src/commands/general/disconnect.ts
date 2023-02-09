@@ -1,9 +1,14 @@
+/**
+ * Disconnects the bot from the voice channel it is in.
+ * @usage /disconnect
+ */
+
 import { SlashCommandBuilder } from 'discord.js'
 import { command, Reply } from '../../utils'
 
 const meta = new SlashCommandBuilder()
     .setName('disconnect')
-    .setDescription('Disconnects the bot from the voice channel it is in.')
+    .setDescription('Disconnects the bot from the voice channel it is in, regardless of queue.')
 
 export default command(meta, async ({ interaction }) => {
     if(!interaction.guild) return interaction.reply(Reply.error('This command can only be used in a server.'))
