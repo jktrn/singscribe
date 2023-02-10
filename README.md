@@ -6,7 +6,7 @@
 ![Discord.js]
 ![Discord Player]
 
-singscribe is a WIP [**Discord**](https://discord.com/) music bot built upon [**TypeScript**](https://www.typescriptlang.org/), the [**Discord.js**](https://discord.js.org/#/) API, and the [**discord-player**](https://discord-player.js.org/) framework.
+singscribe is a WIP [**Discord**](https://discord.com/) music bot built with [**TypeScript**](https://www.typescriptlang.org/), [**Discord.js**](https://discord.js.org/#/), and [**discord-player**](https://discord-player.js.org/).
 
 </div>
 
