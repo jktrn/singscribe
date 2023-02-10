@@ -7,8 +7,4 @@ import connect from './connect'
 import disconnect from './disconnect'
 import help from './help'
 
-export default category('General', [
-    connect,
-    disconnect,
-    help,
-], {'emoji': '⚙️'} )
+export default category('General', [connect, disconnect, help], { emoji: '⚙️' })

@@ -6,20 +6,20 @@ import {
     ButtonStyle,
     EmbedBuilder,
     InteractionReplyOptions,
-    SelectMenuOptionBuilder
-} from "discord.js"
+    SelectMenuOptionBuilder,
+} from 'discord.js'
 import CategoryRoot from '../commands'
-import { chunk, createId, readId } from "../utils"
+import { chunk, createId, readId } from '../utils'
 
 export const Namespaces = {
     root: 'help_category_root',
     select: 'help_category_select',
-    action: 'help_category_action'
+    action: 'help_category_action',
 }
 
 export const Actions = {
     next: '+',
-    back: '-'
+    back: '-',
 }
 
 const N = Namespaces
@@ -33,18 +33,17 @@ const A = Actions
  */
 
 export function getCategoryRoot(ephemeral?: boolean): InteractionReplyOptions {
-    const mappedCategories = CategoryRoot.map(({ name, description, emoji }) =>
-        new SelectMenuOptionBuilder({
-            label: name,
-            description,
-            emoji,
-            value: name,
-        })
+    const mappedCategories = CategoryRoot.map(
+        ({ name, description, emoji }) =>
+            new SelectMenuOptionBuilder({
+                label: name,
+                description,
+                emoji,
+                value: name,
+            })
     )
 
-    const embed = new EmbedBuilder()
-        .setTitle('Help Menu')
-        .setDescription('Browse through all available commands.')
+    const embed = new EmbedBuilder().setTitle('Help Menu').setDescription('Browse through all available commands.')
 
     const selectId = createId(N.select)
     const select = new StringSelectMenuBuilder()
@@ -53,8 +52,7 @@ export function getCategoryRoot(ephemeral?: boolean): InteractionReplyOptions {
         .setMaxValues(1)
         .setOptions(mappedCategories)
 
-    const component = new ActionRowBuilder<StringSelectMenuBuilder>()
-        .addComponents(select)
+    const component = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(select)
 
     return {
         embeds: [embed],
@@ -87,8 +85,7 @@ export function getCategoryPage(interactionId: string): InteractionReplyOptions 
     })
 
     const category = categoryChunks.find(({ name }) => name === categoryName)
-    if (!category)
-        throw new Error('Invalid `interactionId`; Failed to find corresponding category page!')
+    if (!category) throw new Error('Invalid `interactionId`; Failed to find corresponding category page!')
 
     let offset = parseInt(currentOffset)
     if (isNaN(offset)) offset = 0
@@ -112,10 +109,7 @@ export function getCategoryPage(interactionId: string): InteractionReplyOptions 
         .setDisabled(offset <= 0)
 
     const rootId = createId(N.root)
-    const rootButton = new ButtonBuilder()
-        .setCustomId(rootId)
-        .setLabel('Categories')
-        .setStyle(ButtonStyle.Secondary)
+    const rootButton = new ButtonBuilder().setCustomId(rootId).setLabel('Categories').setStyle(ButtonStyle.Secondary)
 
     const nextId = createId(N.action, category.name, A.next, offset)
     const nextButton = new ButtonBuilder()
@@ -124,11 +118,10 @@ export function getCategoryPage(interactionId: string): InteractionReplyOptions 
         .setStyle(ButtonStyle.Success)
         .setDisabled(offset >= 0)
 
-    const component = new ActionRowBuilder<ButtonBuilder>()
-        .addComponents(backButton, rootButton, nextButton)
+    const component = new ActionRowBuilder<ButtonBuilder>().addComponents(backButton, rootButton, nextButton)
 
     return {
         embeds: [embed],
-        components: [component]
+        components: [component],
     }
 }

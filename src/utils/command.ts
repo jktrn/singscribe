@@ -1,10 +1,4 @@
-import {
-    Command,
-    CommandCategory,
-    CommandCategoryExtra,
-    CommandExec,
-    CommandMeta,
-} from '../types'
+import { Command, CommandCategory, CommandCategoryExtra, CommandExec, CommandMeta } from '../types'
 
 /**
  * Creates a Command object.

@@ -14,13 +14,12 @@ export interface CommandProps {
     log: LoggerFunction
 }
 
-export type CommandExec =
-    (props: CommandProps) => Awaitable<unknown>
+export type CommandExec = (props: CommandProps) => Awaitable<unknown>
 
 export type CommandMeta =
     | SlashCommandBuilder
     | SlashCommandSubcommandsOnlyBuilder
-    | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">
+    | Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>
 
 export interface Command {
     meta: CommandMeta

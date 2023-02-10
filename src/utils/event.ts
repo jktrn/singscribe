@@ -28,8 +28,7 @@ export function registerEvents(client: CustomClient, events: Event<any>[]): void
         client.on(event.id, async (...args) => {
             const props = {
                 client,
-                log: (...args: unknown[]) =>
-                    console.log(`[${event.id}]`, ...args),
+                log: (...args: unknown[]) => console.log(`[${event.id}]`, ...args),
             }
 
             try {

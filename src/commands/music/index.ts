@@ -13,14 +13,4 @@ import shuffle from './shuffle'
 import skip from './skip'
 import skipto from './skipto'
 
-export default category('Music', [
-    info,
-    pause,
-    play,
-    queue,
-    quit,
-    resume,
-    shuffle,
-    skip,
-    skipto,
-], {'emoji': '🎵'} )
+export default category('Music', [info, pause, play, queue, quit, resume, shuffle, skip, skipto], { emoji: '🎵' })

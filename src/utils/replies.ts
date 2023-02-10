@@ -1,8 +1,4 @@
-import {
-    EmbedFooterData,
-    InteractionReplyOptions,
-    WebhookEditMessageOptions,
-} from 'discord.js'
+import { EmbedFooterData, InteractionReplyOptions, WebhookEditMessageOptions } from 'discord.js'
 
 export const Colors = {
     error: 0xf54242,
@@ -10,7 +6,6 @@ export const Colors = {
 }
 
 export const Reply = {
-    
     /**
      * Creates interaction reply options for an error message.
      *
@@ -21,10 +16,12 @@ export const Reply = {
     error(msg: string): InteractionReplyOptions {
         return {
             ephemeral: true,
-            embeds: [{
-                color: Colors.error,
-                description: msg,
-            }],
+            embeds: [
+                {
+                    color: Colors.error,
+                    description: msg,
+                },
+            ],
         }
     },
 
@@ -36,18 +33,22 @@ export const Reply = {
      * @param {EmbedFooterData} [footer] - The footer data to be included in the message.
      * @returns {InteractionReplyOptions} The interaction reply options for the informational message.
      */
-    
+
     info(msg: string, thumbnail?: string, footer?: EmbedFooterData): InteractionReplyOptions {
         return {
-            embeds: [{
-                color: Colors.default,
-                description: msg,
-                thumbnail: (thumbnail? {
-                    url: thumbnail,
-                }: undefined),
-                footer,
-                timestamp: new Date().toISOString()
-            }],
+            embeds: [
+                {
+                    color: Colors.default,
+                    description: msg,
+                    thumbnail: thumbnail
+                        ? {
+                              url: thumbnail,
+                          }
+                        : undefined,
+                    footer,
+                    timestamp: new Date().toISOString(),
+                },
+            ],
         }
     },
 }
@@ -60,24 +61,30 @@ export const Reply = {
 export const EditReply = {
     error(msg: string): WebhookEditMessageOptions {
         return {
-            embeds: [{
-                color: Colors.error,
-                description: msg,
-            }],
+            embeds: [
+                {
+                    color: Colors.error,
+                    description: msg,
+                },
+            ],
         }
     },
 
-    info(msg: string, thumbnail?: string, footer?: EmbedFooterData ): WebhookEditMessageOptions {
+    info(msg: string, thumbnail?: string, footer?: EmbedFooterData): WebhookEditMessageOptions {
         return {
-            embeds: [{
-                color: Colors.default,
-                description: msg,
-                thumbnail: (thumbnail? {
-                    url: thumbnail,
-                }: undefined),
-                footer,
-                timestamp: new Date().toISOString()
-            }],
+            embeds: [
+                {
+                    color: Colors.default,
+                    description: msg,
+                    thumbnail: thumbnail
+                        ? {
+                              url: thumbnail,
+                          }
+                        : undefined,
+                    footer,
+                    timestamp: new Date().toISOString(),
+                },
+            ],
         }
-    }
+    },
 }

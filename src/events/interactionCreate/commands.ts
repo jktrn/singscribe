@@ -3,17 +3,9 @@ import { Command } from '../../types'
 import { EditReply, event, Reply } from '../../utils'
 
 const allCommands = commands.map(({ commands }) => commands).flat()
-const allCommandsMap = new Map<string, Command>(
-    allCommands.map((c) => [c.meta.name, c])
-)
+const allCommandsMap = new Map<string, Command>(allCommands.map((c) => [c.meta.name, c]))
 
-export default event('interactionCreate', async (
-    {
-        log,
-        client,
-    },
-    interaction,
-) => {
+export default event('interactionCreate', async ({ log, client }, interaction) => {
     if (!interaction.isChatInputCommand()) return
 
     try {
@@ -32,13 +24,8 @@ export default event('interactionCreate', async (
     } catch (error) {
         log('[Command Error]', error)
 
-        if (interaction.deferred)
-            return interaction.editReply(
-                EditReply.error('Something went wrong!')
-            )
+        if (interaction.deferred) return interaction.editReply(EditReply.error('Something went wrong!'))
 
-        return interaction.reply(
-            Reply.error('Something went wrong!')
-        )
+        return interaction.reply(Reply.error('Something went wrong!'))
     }
 })

@@ -5,7 +5,6 @@ const keys: Keys = {
     testGuild: process.env.TEST_GUILD ?? 'nil',
 }
 
-if (Object.values(keys).includes("nil"))
-    throw new Error("Missing environment variables!")
+if (Object.values(keys).includes('nil')) throw new Error('Missing environment variables!')
 
 export default keys

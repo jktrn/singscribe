@@ -4,7 +4,7 @@ import { Player, GuildQueue } from 'discord-player'
 /**
  * A subclass of Discord.js' Client class with the addition of a player property.
  * The player property is an instance of the 'discord-player' framework.
- * 
+ *
  * @extends {Client}
  */
 
@@ -19,7 +19,7 @@ export class CustomClient extends Client {
 
     /**
      * Gets an existing guild queue for the specified guild ID or creates a new one.
-     * 
+     *
      * @param {string} guildId - ID of the guild to get or create the queue for.
      * @returns {GuildQueue} - The guild queue for the specified guild ID.
      */
