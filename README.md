@@ -2,9 +2,9 @@
 
 ![Banner]
 
-![CodeFactor]
-![Discord.js]
-![Discord Player]
+[![CodeFactor]](https://www.codefactor.io/repository/github/jktrn/singscribe)
+[![Discord.js]](https://discord.js.org/)
+[![Discord Player]](https://discord-player.js.org/)
 
 singscribe is a WIP [**Discord**](https://discord.com/) music bot built with [**TypeScript**](https://www.typescriptlang.org/), [**Discord.js**](https://discord.js.org/#/), and [**discord-player**](https://discord-player.js.org/).
 
