@@ -69,7 +69,7 @@ export default command(meta, async ({ client, interaction }) => {
     } else {
         queue.addTrack(result.tracks[0])
         response = EditReply.info(
-            `**${result.tracks[0].title}** has been added to the queue!`,
+            `[**${result.tracks[0].title}**](${result.tracks[0].url}) has been added to the queue!`,
             result.tracks[0].thumbnail,
             { text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.avatarURL()! }
         )

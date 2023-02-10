@@ -27,7 +27,7 @@ export default command(meta, async ({ client, interaction }) => {
     })
 
     await interaction.reply(Reply.info(
-        `**Currently Playing** [${currentTrack.title}](${currentTrack.url})\n\n` + bar,
+        `Currently Playing: [**${currentTrack.title}**](${currentTrack.url})\n\n` + bar,
         currentTrack.thumbnail,
         { text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.avatarURL()! }
     ))

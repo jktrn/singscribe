@@ -24,7 +24,7 @@ export default command(meta, async ({ client, interaction }) => {
 
     queue.node.skip()
     await interaction.reply(Reply.info(
-        `[${queue.currentTrack!.title}](${queue.currentTrack!.url}) has been skipped!\n**Now Playing**: ${nextTrackString}}`,
+        `[${queue.currentTrack!.title}](${queue.currentTrack!.url}) has been skipped!\n**Now Playing**: ${nextTrackString}`,
         nextTrack?.thumbnail,
     ))
 })
