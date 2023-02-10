@@ -100,6 +100,18 @@ Here are tables of commands that singscribe currently supports:
 
 --- 
 
+## 📈 Statistics
+
+<div align="center">
+<br>
+
+![Repobeats]
+
+<br>
+</div>
+
+---
+
 ## 📝 License
 
 All code in this repository is licensed under the [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl-3.0.en.html). See the [LICENSE](LICENSE) file for more information.
@@ -108,3 +120,4 @@ All code in this repository is licensed under the [GNU Affero General Public Lic
 [CodeFactor]: https://img.shields.io/codefactor/grade/github/jktrn/singscribe?color=294978&style=for-the-badge&logo=codefactor&logoColor=fff
 [Discord.js]: https://img.shields.io/github/package-json/dependency-version/jktrn/singscribe/discord.js?color=3e5b86&style=for-the-badge&logo=discord&logoColor=fff
 [Discord Player]: https://img.shields.io/github/package-json/dependency-version/jktrn/singscribe/discord-player?color=546d93&style=for-the-badge&logo=npm&logoColor=white
+[Repobeats]: https://repobeats.axiom.co/api/embed/4ef8487ca1659263c1548841b580b69a17adf06e.svg
