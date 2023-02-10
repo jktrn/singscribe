@@ -11,8 +11,10 @@ const meta = new SlashCommandBuilder()
     .setDescription('Disconnects the bot from the voice channel it is in, regardless of queue.')
 
 export default command(meta, async ({ interaction }) => {
+    // Check if the command was used in a server
     if(!interaction.guild) return interaction.reply(Reply.error('This command can only be used in a server.'))
 
+    // Various voice state checks
     const member = await interaction.guild.members.fetch(interaction.user.id)
     const voiceChannel = member.voice.channelId
     const botChannel = interaction.guild.members.me?.voice

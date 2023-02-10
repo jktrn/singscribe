@@ -11,14 +11,12 @@ import {
 import CategoryRoot from '../commands'
 import { chunk, createId, readId } from "../utils"
 
-// Namespaces we will use
 export const Namespaces = {
     root: 'help_category_root',
     select: 'help_category_select',
     action: 'help_category_action'
 }
 
-// Actions we will use
 export const Actions = {
     next: '+',
     back: '-'
@@ -27,9 +25,14 @@ export const Actions = {
 const N = Namespaces
 const A = Actions
 
-// Generate root embed for help paginator
+/**
+ * Returns an InteractionReplyOptions object for the root category page.
+ *
+ * @param {boolean} [ephemeral=false] - Whether InteractionReplyOptions should be ephemeral or not.
+ * @return {InteractionReplyOptions} The interaction reply options for the root category page.
+ */
+
 export function getCategoryRoot(ephemeral?: boolean): InteractionReplyOptions {
-    // Map the categories
     const mappedCategories = CategoryRoot.map(({ name, description, emoji }) =>
         new SelectMenuOptionBuilder({
             label: name,
@@ -39,12 +42,10 @@ export function getCategoryRoot(ephemeral?: boolean): InteractionReplyOptions {
         })
     )
 
-    // Create embed
     const embed = new EmbedBuilder()
         .setTitle('Help Menu')
         .setDescription('Browse through all available commands.')
 
-    // Create select menu for categories
     const selectId = createId(N.select)
     const select = new StringSelectMenuBuilder()
         .setCustomId(selectId)
@@ -62,13 +63,18 @@ export function getCategoryRoot(ephemeral?: boolean): InteractionReplyOptions {
     }
 }
 
-// Generate new embed for current category page
+/**
+ * Returns an interaction reply options object for the category command page specified in the interaction ID.
+ *
+ * @param {string} interactionId - The interaction ID that specifies the category command page.
+ * @return {InteractionReplyOptions} The interaction reply options for the category command page.
+ * @throws {Error} When the interaction ID is invalid.
+ */
+
 export function getCategoryPage(interactionId: string): InteractionReplyOptions {
-    // Extract needed metadata from interactionId
     const [_namespace, categoryName, action, currentOffset] = readId(interactionId)
 
     const categoryChunks = CategoryRoot.map((c) => {
-        // Pre-map all commands as embed fields
         const commands: APIEmbedField[] = c.commands.map((c) => ({
             name: c.meta.name,
             value: c.meta.description,
@@ -84,11 +90,8 @@ export function getCategoryPage(interactionId: string): InteractionReplyOptions 
     if (!category)
         throw new Error('Invalid `interactionId`; Failed to find corresponding category page!')
 
-    // Get current offset 
     let offset = parseInt(currentOffset)
-    // if is NaN set offset to 0
     if (isNaN(offset)) offset = 0
-    // Increment offset according to action
     if (action === A.next) offset++
     else if (action === A.back) offset--
 
@@ -101,7 +104,6 @@ export function getCategoryPage(interactionId: string): InteractionReplyOptions 
         .setFields(category.commands[offset])
         .setFooter({ text: `Page ${offset + 1} of ${category.commands.length}` })
 
-    // Back button
     const backId = createId(N.action, category.name, A.back, offset)
     const backButton = new ButtonBuilder()
         .setCustomId(backId)
@@ -109,14 +111,12 @@ export function getCategoryPage(interactionId: string): InteractionReplyOptions 
         .setStyle(ButtonStyle.Danger)
         .setDisabled(offset <= 0)
 
-    // Return to root
     const rootId = createId(N.root)
     const rootButton = new ButtonBuilder()
         .setCustomId(rootId)
         .setLabel('Categories')
         .setStyle(ButtonStyle.Secondary)
 
-    // Next button
     const nextId = createId(N.action, category.name, A.next, offset)
     const nextButton = new ButtonBuilder()
         .setCustomId(nextId)

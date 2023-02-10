@@ -7,6 +7,7 @@ import { REST, Routes, APIUser } from 'discord.js'
 import commands from '../commands'
 import keys from '../keys'
 
+// Grabs all command metadata and maps it into an array CommandMeta[].
 const body = commands.map(({ commands }) => 
     commands.map(({ meta }) => meta)
 ).flat()
@@ -16,6 +17,7 @@ const rest = new REST({ version: '10' }).setToken(keys.token)
 async function main() {
     const currentUser = await rest.get(Routes.user()) as APIUser
 
+    // If the environment is production, the commands will be registered globally.
     const endpoint = process.env.NODE_ENV === 'production'
         ? Routes.applicationCommands(currentUser.id)
         : Routes.applicationGuildCommands(currentUser.id, keys.testGuild)

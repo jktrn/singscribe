@@ -14,11 +14,11 @@ export default command(meta, async ({ client, interaction }) => {
     // Check if the command was used in a server
     if(!interaction.guild) return interaction.reply(Reply.error('This command can only be used in a server.'))
 
+    // Various voice state checks
     const member = await interaction.guild.members.fetch(interaction.user.id)
     const voiceChannel = member.voice.channelId
     const botChannel = interaction.guild.members.me?.voice.channelId
 
-    // Various voice state checks
     if(voiceChannel === botChannel) return interaction.reply(Reply.error('I\'m already connected to your voice channel.'))
     if(voiceChannel !== botChannel) return interaction.reply(Reply.error('You must be in the same voice channel as the bot to use this command.'))
     if(!voiceChannel) return interaction.reply(Reply.error('You must be in a voice channel to use this command.'))

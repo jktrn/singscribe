@@ -10,6 +10,14 @@ export const Colors = {
 }
 
 export const Reply = {
+    
+    /**
+     * Creates interaction reply options for an error message.
+     *
+     * @param {string} msg - The error message.
+     * @returns {InteractionReplyOptions} The interaction reply options for the error message.
+     */
+
     error(msg: string): InteractionReplyOptions {
         return {
             ephemeral: true,
@@ -20,6 +28,15 @@ export const Reply = {
         }
     },
 
+    /**
+     * Creates interaction reply options for an informational message.
+     *
+     * @param {string} msg - The informational message.
+     * @param {string} [thumbnail] - The URL of the thumbnail image to be included in the message.
+     * @param {EmbedFooterData} [footer] - The footer data to be included in the message.
+     * @returns {InteractionReplyOptions} The interaction reply options for the informational message.
+     */
+    
     info(msg: string, thumbnail?: string, footer?: EmbedFooterData): InteractionReplyOptions {
         return {
             embeds: [{
@@ -34,6 +51,11 @@ export const Reply = {
         }
     },
 }
+
+/**
+ * Equivalent functions for WebhookEditMessageOptions (deferred replies).
+ * Does not support ephemeral replies.
+ */
 
 export const EditReply = {
     error(msg: string): WebhookEditMessageOptions {
